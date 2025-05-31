@@ -21,10 +21,9 @@ func RunServer() {
 	}
 
 	r.Get("/api/nextdate", NextDateHandler)
+	r.Post("/api/task", AddTaskHandler)
 
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Произошла ошибка при запуске сервера %v", err)
 	}
-
-	//http.HandleFunc("/api/nextdate", NextDateHandler)
 }

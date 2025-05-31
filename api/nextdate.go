@@ -57,12 +57,6 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 			}
 		}
 
-	case "w":
-		return "", errors.New("'w' rule not implemented")
-
-	case "m":
-		return "", errors.New("'m' rule not implemented")
-
 	default:
 		return "", fmt.Errorf("unsupported repeat rule: %s", parts[0])
 	}
@@ -79,10 +73,6 @@ func afterNow(date, now time.Time) bool {
 
 // NextDateHandler обработчик для /api/nextdate
 func NextDateHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
 
 	nowStr := r.FormValue("now")
 	dateStr := r.FormValue("date")
