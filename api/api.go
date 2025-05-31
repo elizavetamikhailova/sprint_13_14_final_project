@@ -22,6 +22,7 @@ func RunServer() {
 
 	r.Get("/api/nextdate", NextDateHandler)
 	r.Post("/api/task", AddTaskHandler)
+	r.Get("/api/tasks", TasksHandler)
 
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Произошла ошибка при запуске сервера %v", err)
