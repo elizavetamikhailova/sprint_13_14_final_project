@@ -1,8 +1,8 @@
 package main
 
 import (
+	"elizavetamikhailova/sprint_13_14_final_project/api"
 	"elizavetamikhailova/sprint_13_14_final_project/db"
-	"elizavetamikhailova/sprint_13_14_final_project/server"
 	"log"
 )
 
@@ -12,5 +12,5 @@ func main() {
 	}
 	defer db.Close()
 
-	server.RunServer()
+	api.RunServer()
 }

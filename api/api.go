@@ -1,4 +1,4 @@
-package server
+package api
 
 import (
 	"log"
@@ -20,7 +20,11 @@ func RunServer() {
 		port = "7540"
 	}
 
+	r.Get("/api/nextdate", NextDateHandler)
+
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Произошла ошибка при запуске сервера %v", err)
 	}
+
+	//http.HandleFunc("/api/nextdate", NextDateHandler)
 }
