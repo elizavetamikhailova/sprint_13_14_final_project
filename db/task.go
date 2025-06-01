@@ -52,3 +52,54 @@ func GetTasks(limit int) ([]*Task, error) {
 
 	return tasks, nil
 }
+
+// GetTask возвращает задачу по ID
+func GetTask(id string) (*Task, error) {
+	var task Task
+
+	query := `SELECT id, date, title, comment, repeat FROM scheduler WHERE id = ?`
+	err := GetDB().QueryRow(query, id).Scan(
+		&task.ID,
+		&task.Date,
+		&task.Title,
+		&task.Comment,
+		&task.Repeat,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to get task: %w", err)
+	}
+
+	return &task, nil
+}
+
+// UpdateTask обновляет существующую задачу
+func UpdateTask(task *Task) error {
+	query := `UPDATE scheduler 
+              SET date = ?, title = ?, comment = ?, repeat = ? 
+              WHERE id = ?`
+
+	res, err := GetDB().Exec(
+		query,
+		task.Date,
+		task.Title,
+		task.Comment,
+		task.Repeat,
+		task.ID,
+	)
+
+	if err != nil {
+		return fmt.Errorf("failed to update task: %w", err)
+	}
+
+	count, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if count == 0 {
+		return fmt.Errorf("failed to get task: %w", err)
+	}
+
+	return nil
+}

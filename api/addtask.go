@@ -45,11 +45,7 @@ func validateAndAdjustTask(task *db.Task) error {
 	now := time.Now()
 	currentDate := now.Format(dateFormat)
 
-	// Обработка специального значения "today"
-	if task.Date == "today" {
-		task.Date = currentDate
-		return nil
-	}
+	fmt.Printf("task date is %s \n", task.Date)
 
 	// Если дата не указана, используем текущую дату
 	if task.Date == "" {
@@ -64,13 +60,17 @@ func validateAndAdjustTask(task *db.Task) error {
 
 	// Если есть правило повторения, проверяем его и вычисляем следующую дату
 	if task.Repeat != "" {
-		next, err := NextDate(now, task.Date, task.Repeat)
-		if err != nil {
-			return err
+		if today(now, t) {
+			task.Date = currentDate
+		} else {
+			next, err := NextDate(now, task.Date, task.Repeat)
+			if err != nil {
+				return err
+			}
+			task.Date = next
 		}
-		task.Date = next
+		
 	} else if afterNow(now, t) {
-		// Если дата в прошлом и нет правила повторения, используем текущую дату
 		task.Date = currentDate
 	}
 

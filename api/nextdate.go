@@ -68,7 +68,16 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 func afterNow(date, now time.Time) bool {
 	y1, m1, d1 := date.Date()
 	y2, m2, d2 := now.Date()
+	if y1 == y2 && m1 == m2 && d1 == d2 {
+		return false
+	}
 	return y1 > y2 || (y1 == y2 && m1 > m2) || (y1 == y2 && m1 == m2 && d1 > d2)
+}
+
+func today(date, now time.Time) bool {
+	y1, m1, d1 := date.Date()
+	y2, m2, d2 := now.Date()
+	return y1 == y2 && m1 == m2 && d1 == d2
 }
 
 // NextDateHandler обработчик для /api/nextdate

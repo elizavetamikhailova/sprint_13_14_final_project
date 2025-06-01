@@ -1,4 +1,3 @@
-// pkg/api/tasks.go
 package api
 
 import (
