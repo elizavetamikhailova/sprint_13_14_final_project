@@ -103,3 +103,43 @@ func UpdateTask(task *Task) error {
 
 	return nil
 }
+
+// DeleteTask удаляет задачу по ID
+func DeleteTask(id string) error {
+	query := `DELETE FROM scheduler WHERE id = ?`
+	res, err := GetDB().Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("failed to delete task: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("task not found")
+	}
+
+	return nil
+}
+
+// UpdateTaskDate обновляет только дату выполнения задачи
+func UpdateTaskDate(id string, newDate string) error {
+	query := `UPDATE scheduler SET date = ? WHERE id = ?`
+	res, err := GetDB().Exec(query, newDate, id)
+	if err != nil {
+		return fmt.Errorf("failed to update task date: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("task not found")
+	}
+
+	return nil
+}
