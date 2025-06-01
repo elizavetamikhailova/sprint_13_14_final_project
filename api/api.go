@@ -26,6 +26,8 @@ func RunServer() {
 	r.Get("/api/task", TaskHandler)
 	r.Put("/api/task", UpdateTaskHandler)
 	r.Post("/api/task/done", TaskDoneHandler)
+	r.Delete("/api/task", DeleteTaskHandler)
+
 
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Произошла ошибка при запуске сервера %v", err)
