@@ -7,31 +7,31 @@ import (
 )
 
 func UpdateTaskHandler(w http.ResponseWriter, r *http.Request) {
-    var task db.Task
-    if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-        writeJSON(w, "Invalid JSON format")
-        return
-    }
+	var task db.Task
+	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
+		writeJSON(w, TaskResponse{Error: "Invalid JSON format"})
+		return
+	}
 
-    if task.ID == 0 {
-        writeJSON(w, "Task ID is required")
-        return
-    }
+	if task.ID == 0 {
+		writeJSON(w, TaskResponse{Error: "Task ID is required"})
+		return
+	}
 
-    if task.Title == "" {
-        writeJSON(w, "Task title is required")
-        return
-    }
+	if task.Title == "" {
+		writeJSON(w, TaskResponse{Error: "Task title is required"})
+		return
+	}
 
-    if err := validateAndAdjustTask(&task); err != nil {
-        writeJSON(w, err.Error())
-        return
-    }
+	if err := validateAndAdjustTask(&task); err != nil {
+		writeJSON(w, TaskResponse{Error: err.Error()})
+		return
+	}
 
-    if err := db.UpdateTask(&task); err != nil {
-        writeJSON(w, err.Error())
-        return
-    }
+	if err := db.UpdateTask(&task); err != nil {
+		writeJSON(w, TaskResponse{Error: err.Error()})
+		return
+	}
 
-    writeJSON(w, map[string]interface{}{})
+	writeJSON(w, TaskResponse{ID: task.ID})
 }

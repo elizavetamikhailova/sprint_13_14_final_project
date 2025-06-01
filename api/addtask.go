@@ -4,7 +4,6 @@ import (
 	"elizavetamikhailova/sprint_13_14_final_project/db"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -27,7 +26,6 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("will add to db date from task is %s \n", task.Date)
 	id, err := db.AddTask(&task)
 	if err != nil {
 		writeJSON(w, TaskResponse{Error: "Failed to add task to database"})
@@ -44,8 +42,6 @@ func validateAndAdjustTask(task *db.Task) error {
 
 	now := time.Now()
 	currentDate := now.Format(dateFormat)
-
-	fmt.Printf("task date is %s \n", task.Date)
 
 	// Если дата не указана, используем текущую дату
 	if task.Date == "" {
