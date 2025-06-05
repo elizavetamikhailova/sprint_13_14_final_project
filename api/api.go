@@ -27,6 +27,7 @@ func RunServer() {
 	r.Put("/api/task", UpdateTaskHandler)
 	r.Post("/api/task/done", TaskDoneHandler)
 	r.Delete("/api/task", DeleteTaskHandler)
+	r.Post("/api/signin", SignInHandler)
 
 
 	if err := http.ListenAndServe(":"+port, r); err != nil {
