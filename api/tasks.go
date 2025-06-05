@@ -11,7 +11,6 @@ type TasksResponse struct {
 
 func TasksHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Получаем задачи с лимитом 50
 	tasks, err := db.GetTasks(50)
 	if err != nil {
 		writeJSON(w, TaskResponse{Error: "Failed to get tasks"})

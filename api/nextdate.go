@@ -11,7 +11,6 @@ import (
 
 const dateFormat = "20060102"
 
-// NextDate вычисляет следующую дату выполнения задачи
 func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	if repeat == "" {
 		return "", errors.New("repeat rule cannot be empty")
@@ -64,7 +63,6 @@ func NextDate(now time.Time, dstart string, repeat string) (string, error) {
 	return date.Format(dateFormat), nil
 }
 
-// afterNow проверяет, что date > now (без учета времени)
 func afterNow(date, now time.Time) bool {
 	y1, m1, d1 := date.Date()
 	y2, m2, d2 := now.Date()
@@ -80,7 +78,6 @@ func today(date, now time.Time) bool {
 	return y1 == y2 && m1 == m2 && d1 == d2
 }
 
-// NextDateHandler обработчик для /api/nextdate
 func NextDateHandler(w http.ResponseWriter, r *http.Request) {
 
 	nowStr := r.FormValue("now")

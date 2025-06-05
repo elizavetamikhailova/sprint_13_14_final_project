@@ -10,7 +10,6 @@ type Task struct {
 	Repeat  string `json:"repeat"`
 }
 
-// AddTask добавляет задачу в базу данных
 func AddTask(task *Task) (int64, error) {
 	query := `INSERT INTO scheduler (date, title, comment, repeat) VALUES (?, ?, ?, ?)`
 	res, err := GetDB().Exec(query, task.Date, task.Title, task.Comment, task.Repeat)
@@ -20,7 +19,6 @@ func AddTask(task *Task) (int64, error) {
 	return res.LastInsertId()
 }
 
-// GetTasks возвращает список задач, отсортированный по дате
 func GetTasks(limit int) ([]*Task, error) {
 	query := `SELECT id, date, title, comment, repeat FROM scheduler 
               ORDER BY date ASC LIMIT ?`
@@ -45,7 +43,6 @@ func GetTasks(limit int) ([]*Task, error) {
 		return nil, fmt.Errorf("rows error: %w", err)
 	}
 
-	// Возвращаем пустой слайс вместо nil
 	if tasks == nil {
 		tasks = []*Task{}
 	}
@@ -53,7 +50,6 @@ func GetTasks(limit int) ([]*Task, error) {
 	return tasks, nil
 }
 
-// GetTask возвращает задачу по ID
 func GetTask(id string) (*Task, error) {
 	var task Task
 
@@ -73,7 +69,6 @@ func GetTask(id string) (*Task, error) {
 	return &task, nil
 }
 
-// UpdateTask обновляет существующую задачу
 func UpdateTask(task *Task) error {
 	query := `UPDATE scheduler 
               SET date = ?, title = ?, comment = ?, repeat = ? 
@@ -104,7 +99,6 @@ func UpdateTask(task *Task) error {
 	return nil
 }
 
-// DeleteTask удаляет задачу по ID
 func DeleteTask(id string) error {
 	query := `DELETE FROM scheduler WHERE id = ?`
 	res, err := GetDB().Exec(query, id)
@@ -124,7 +118,6 @@ func DeleteTask(id string) error {
 	return nil
 }
 
-// UpdateTaskDate обновляет только дату выполнения задачи
 func UpdateTaskDate(id string, newDate string) error {
 	query := `UPDATE scheduler SET date = ? WHERE id = ?`
 	res, err := GetDB().Exec(query, newDate, id)

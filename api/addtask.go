@@ -43,18 +43,15 @@ func validateAndAdjustTask(task *db.Task) error {
 	now := time.Now()
 	currentDate := now.Format(dateFormat)
 
-	// Если дата не указана, используем текущую дату
 	if task.Date == "" {
 		task.Date = currentDate
 	}
 
-	// Проверяем формат даты
 	t, err := time.Parse(dateFormat, task.Date)
 	if err != nil {
 		return errors.New("invalid date format, expected YYYYMMDD")
 	}
 
-	// Если есть правило повторения, проверяем его и вычисляем следующую дату
 	if task.Repeat != "" {
 		if today(now, t) {
 			task.Date = currentDate

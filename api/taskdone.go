@@ -14,7 +14,6 @@ func TaskDoneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Получаем задачу из базы данных
 	task, err := db.GetTask(id)
 	if err != nil {
 		writeJSON(w, TaskResponse{Error: err.Error()})
@@ -24,20 +23,17 @@ func TaskDoneHandler(w http.ResponseWriter, r *http.Request) {
 	now := time.Now()
 
 	if task.Repeat == "" {
-		// Удаляем одноразовую задачу
 		if err := db.DeleteTask(id); err != nil {
 			writeJSON(w, TaskResponse{Error: "Failed to delete task"})
 			return
 		}
 	} else {
-		// Для периодической задачи вычисляем следующую дату
 		nextDate, err := NextDate(now, task.Date, task.Repeat)
 		if err != nil {
 			writeJSON(w, TaskResponse{Error: err.Error()})
 			return
 		}
 
-		// Обновляем дату выполнения задачи
 		if err := db.UpdateTaskDate(id, nextDate); err != nil {
 			writeJSON(w, TaskResponse{Error: "Failed to update task date"})
 			return
