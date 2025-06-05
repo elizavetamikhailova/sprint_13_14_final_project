@@ -25,30 +25,25 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	savedPassword := os.Getenv("TODO_PASSWORD")
-	if savedPassword == "" {
-		savedPassword = "12345"
-	}
+	// if savedPassword == "" {
+	// 	savedPassword = "12345"
+	// }
 
 	if password.Password != savedPassword {
 		writeJSON(w, SignInResponse{Error: "Неверный пароль"})
 		return
 	}
-
-	hash := sha256.New()
-	hash.Write([]byte(password.Password))
-	hashedBytes := hash.Sum(nil)
-	hashedString := hex.EncodeToString(hashedBytes)
 	
-	writeJSON(w, SignInResponse{Token: hashedString})
+	writeJSON(w, SignInResponse{Token: getFakeJwt(password.Password)})
 }
 
 func auth(next http.HandlerFunc) http.HandlerFunc {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         // смотрим наличие пароля
         pass := os.Getenv("TODO_PASSWORD")
-		if pass == "" {
-			pass = "12345"
-		}
+		// if pass == "" {
+		// 	pass = "12345"
+		// }
         if len(pass) > 0 {
             var jwt string  // JWT-токен из куки
             // получаем куку
@@ -56,9 +51,10 @@ func auth(next http.HandlerFunc) http.HandlerFunc {
             if err == nil {
                 jwt = cookie.Value
             }
-            var valid bool
+        
             // здесь код для валидации и проверки JWT-токена
-            valid = jwt != ""
+			valid := isFakeJwtValid(jwt)
+
 
             if !valid {
                 // возвращаем ошибку авторизации 401
@@ -68,4 +64,15 @@ func auth(next http.HandlerFunc) http.HandlerFunc {
         }
         next(w, r)
     })
+}
+
+func getFakeJwt(password string) string {
+	hash := sha256.New()
+	hash.Write([]byte(password))
+	hashedBytes := hash.Sum(nil)
+	return hex.EncodeToString(hashedBytes)
+}
+
+func isFakeJwtValid(jwt string) bool {
+	return jwt != ""
 }
