@@ -21,11 +21,11 @@ func RunServer() {
 	}
 
 	r.Get("/api/nextdate", NextDateHandler)
-	r.Post("/api/task", AddTaskHandler)
-	r.Get("/api/tasks", TasksHandler)
+	r.Post("/api/task", auth(AddTaskHandler))
+	r.Get("/api/tasks", auth(TasksHandler))
 	r.Get("/api/task", TaskHandler)
 	r.Put("/api/task", UpdateTaskHandler)
-	r.Post("/api/task/done", TaskDoneHandler)
+	r.Post("/api/task/done", auth(TaskDoneHandler))
 	r.Delete("/api/task", DeleteTaskHandler)
 	r.Post("/api/signin", SignInHandler)
 
