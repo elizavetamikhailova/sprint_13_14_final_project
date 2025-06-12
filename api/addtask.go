@@ -17,22 +17,22 @@ func AddTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	var task db.Task
 	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
-		writeJSON(w, TaskResponse{Error: "Invalid JSON format"})
+		writeJSON(w, TaskResponse{Error: "Invalid JSON format"}, http.StatusBadRequest)
 		return
 	}
 
 	if err := validateAndAdjustTask(&task); err != nil {
-		writeJSON(w, TaskResponse{Error: err.Error()})
+		writeJSON(w, TaskResponse{Error: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
 	id, err := db.AddTask(&task)
 	if err != nil {
-		writeJSON(w, TaskResponse{Error: "Failed to add task to database"})
+		writeJSON(w, TaskResponse{Error: "Failed to add task to database"}, http.StatusBadRequest)
 		return
 	}
 
-	writeJSON(w, TaskResponse{ID: id})
+	writeJSON(w, TaskResponse{ID: id}, http.StatusOK)
 }
 
 func validateAndAdjustTask(task *db.Task) error {
@@ -68,9 +68,4 @@ func validateAndAdjustTask(task *db.Task) error {
 	}
 
 	return nil
-}
-
-func writeJSON(w http.ResponseWriter, data interface{}) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	json.NewEncoder(w).Encode(data)
 }

@@ -20,18 +20,18 @@ type SignInResponse struct {
 func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	var password Password
 	if err := json.NewDecoder(r.Body).Decode(&password); err != nil {
-		writeJSON(w, SignInResponse{Error: "Invalid JSON format"})
+		writeJSON(w, SignInResponse{Error: "Invalid JSON format"}, http.StatusBadRequest)
 		return
 	}
 
 	savedPassword := os.Getenv("TODO_PASSWORD")
 
 	if password.Password != savedPassword {
-		writeJSON(w, SignInResponse{Error: "Неверный пароль"})
+		writeJSON(w, SignInResponse{Error: "Неверный пароль"}, http.StatusForbidden)
 		return
 	}
 	
-	writeJSON(w, SignInResponse{Token: getFakeJwt(password.Password)})
+	writeJSON(w, SignInResponse{Token: getFakeJwt(password.Password)}, http.StatusOK)
 }
 
 func auth(next http.HandlerFunc) http.HandlerFunc {

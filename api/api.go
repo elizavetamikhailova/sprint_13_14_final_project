@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -33,4 +34,13 @@ func RunServer() {
 	if err := http.ListenAndServe(":"+port, r); err != nil {
 		log.Fatalf("Произошла ошибка при запуске сервера %v", err)
 	}
+}
+
+func writeJSON(w http.ResponseWriter, data interface{}, statusCode int) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	json.NewEncoder(w).Encode(data)
+}
+
+func writeJSONError(w http.ResponseWriter, errorMsg string, statusCode int) {
+    writeJSON(w, map[string]string{"error": errorMsg}, statusCode)
 }

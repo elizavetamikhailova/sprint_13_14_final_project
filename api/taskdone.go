@@ -10,13 +10,13 @@ func TaskDoneHandler(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
 	if id == "" {
-		writeJSON(w, TaskResponse{Error: "Task ID is required"})
+		writeJSON(w, TaskResponse{Error: "Task ID is required"}, http.StatusBadRequest)
 		return
 	}
 
 	task, err := db.GetTask(id)
 	if err != nil {
-		writeJSON(w, TaskResponse{Error: err.Error()})
+		writeJSON(w, TaskResponse{Error: err.Error()}, http.StatusBadRequest)
 		return
 	}
 
@@ -24,21 +24,21 @@ func TaskDoneHandler(w http.ResponseWriter, r *http.Request) {
 
 	if task.Repeat == "" {
 		if err := db.DeleteTask(id); err != nil {
-			writeJSON(w, TaskResponse{Error: "Failed to delete task"})
+			writeJSON(w, TaskResponse{Error: "Failed to delete task"}, http.StatusBadRequest)
 			return
 		}
 	} else {
 		nextDate, err := NextDate(now, task.Date, task.Repeat)
 		if err != nil {
-			writeJSON(w, TaskResponse{Error: err.Error()})
+			writeJSON(w, TaskResponse{Error: err.Error()}, http.StatusBadRequest)
 			return
 		}
 
 		if err := db.UpdateTaskDate(id, nextDate); err != nil {
-			writeJSON(w, TaskResponse{Error: "Failed to update task date"})
+			writeJSON(w, TaskResponse{Error: "Failed to update task date"}, http.StatusBadRequest)
 			return
 		}
 	}
 
-	writeJSON(w, TaskResponse{})
+	writeJSON(w, TaskResponse{}, http.StatusOK)
 }

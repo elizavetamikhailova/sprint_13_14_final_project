@@ -13,9 +13,9 @@ func TasksHandler(w http.ResponseWriter, r *http.Request) {
 
 	tasks, err := db.GetTasks(50)
 	if err != nil {
-		writeJSON(w, TaskResponse{Error: "Failed to get tasks"})
+		writeJSON(w, TaskResponse{Error: "Failed to get tasks"}, http.StatusBadRequest)
 		return
 	}
 
-	writeJSON(w, TasksResponse{Tasks: tasks})
+	writeJSON(w, TasksResponse{Tasks: tasks}, http.StatusOK)
 }
