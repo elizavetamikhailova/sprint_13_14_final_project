@@ -38,9 +38,6 @@ func RunServer() {
 
 func writeJSON(w http.ResponseWriter, data interface{}, statusCode int) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(statusCode)
 	json.NewEncoder(w).Encode(data)
-}
-
-func writeJSONError(w http.ResponseWriter, errorMsg string, statusCode int) {
-    writeJSON(w, map[string]string{"error": errorMsg}, statusCode)
 }
