@@ -148,6 +148,7 @@ func TestAddTask(t *testing.T) {
 				continue
 			}
 			if today && task.Date != now.Format(`20060102`) {
+				t.Logf("сейчас %s %s %s", now.Format(`20060102`), task.Date, v.date)
 				t.Errorf("Дата должна быть сегодняшняя %v", v)
 			}
 		}
